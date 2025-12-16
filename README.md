@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>랜덤 조 편성기</title>
+  <title>RKS 조를 편성해요</title>
   <style>
     :root { --border:#e5e7eb; --text:#111827; --muted:#6b7280; }
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; color: var(--text); }
