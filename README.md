@@ -1,5 +1,4 @@
-# pickthespoon
-<!doctype html>
+# Let's pick the spoon
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
