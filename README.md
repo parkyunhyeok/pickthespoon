@@ -1,4 +1,4 @@
-<!doctype html>
+
 <html lang="ko" translate="no">
 <head>
   <meta charset="utf-8" />
@@ -55,9 +55,9 @@
       align-items: center;
       justify-content: center;
 
-      font-size: 80px;
-      font-weight: 1200;
-      letter-spacing: 6px;
+      font-size: 56px;
+      font-weight: 900;
+      letter-spacing: 10px;
       font-style: italic;
       transform: rotate(-6deg);
       color: rgba(11, 80, 138, 0.12);
