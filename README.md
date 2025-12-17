@@ -108,7 +108,7 @@ body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; marg
             <label for="enforceNoRepeatRest" style="margin:0; color:var(--text);">직전 휴식자는 이번 휴식자에서 제외(가능한 경우 강제)</label>
           </div>
 
-          <button id="btnMake">팀 매</button>
+          <button id="btnMake">팀 매칭</button>
           <button id="btnReset" class="secondary">초기화</button>
         </div>
 
