@@ -41,9 +41,9 @@ body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; marg
     input[type="checkbox"]{ transform: translateY(1px); }
     button{
       padding: 10px 14px; border: 1px solid var(--border); border-radius: 12px;
-      background:#111827; color:#fff; cursor:pointer; font-size:14px;
+        background: var(--grad-blue); color:#ffffff; border: none; cursor:pointer; font-size:14px;
     }
-    button.secondary{ background:#fff; color:#111827; }
+    button.secondary{background:#ffffff; color: var(--blue-samsung); border:1px solid var(--blue-samsung); }
     button:active{ transform: translateY(1px); }
     .hint { font-size: 13px; color: var(--muted); margin-top: 6px; }
     .status { font-size: 13px; margin-top: 8px; }
