@@ -79,7 +79,7 @@ body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; marg
         <div class="split">
           <div>
             <label for="names">참여자 이름(쉼표로 구분)</label>
-            <textarea id="names" placeholder="예)&#10;김철수&#10;이영희&#10;박민수&#10;최지은"></textarea>
+            <textarea id="names" placeholder="예)&#10;강성준&#10;김늠름&#10;고원섭&#10;송준영"></textarea>
             <div class="hint">
               * 1경기 = 4명(복식 기준)으로 조 편성<br/>
             </div>
@@ -87,8 +87,8 @@ body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; marg
 
           <div>
             <label for="prevRest">휴식자 입력</label>
-            <textarea id="prevRest" class="small" placeholder="예)&#10;이영희&#10;최지은"></textarea>
-            <div class="hint">* 입력된 사람은 가능한 한 이번 라운드에 ‘경기 참여자’로 배정</div>
+            <textarea id="prevRest" class="small" placeholder="예)&#10;서한솔&#10;누리"></textarea>
+            <div class="hint">* 휴식자는 이번 경기에는 ‘참여자’로 배정</div>
           </div>
         </div>
 
@@ -108,7 +108,7 @@ body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; marg
             <label for="enforceNoRepeatRest" style="margin:0; color:var(--text);">직전 휴식자는 이번 휴식자에서 제외(가능한 경우 강제)</label>
           </div>
 
-          <button id="btnMake">조 편성</button>
+          <button id="btnMake">팀 매</button>
           <button id="btnReset" class="secondary">초기화</button>
         </div>
 
