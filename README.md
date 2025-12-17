@@ -13,7 +13,9 @@
 
       /* Background */
       --page-bg:#f3f4f6;
-      --top-grad: linear-gradient(180deg, #0B3C8A 0%, #081A33 100%);
+      --top-grad: linear-gradient(180deg,#f3f4f6 0%,
+  #e5e7eb 100%);
+ );
       --grad-blue: linear-gradient(135deg, #6EC6FF 0%, #0B3C8A 100%);
 
       /* UI */
@@ -42,11 +44,35 @@
 
     /* ✅ 최상단만 그라데이션 포인트 */
     body::before{
-      content:"";
-      position: fixed;
+      content:"LET'S PLAY RKS";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 220px;
+
+  background: linear-gradient(
+    180deg,
+    #f3f4f6 0%,
+    #e5e7eb 100%
+  );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: rgba(11, 60, 138, 0.08); /* 삼성블루 느낌의 워터마크 */
+  text-transform: uppercase;
+
+  z-index: -1;
+  pointer-events: none;
+}
       top: 0; left: 0;
       width: 100%;
-      height: 220px; /* 포인트 높이 (원하면 180~260px 조절) */
+      height: 50px; /* 포인트 높이 (원하면 180~260px 조절) */
       background: var(--top-grad);
       z-index: -1;
     }
