@@ -279,7 +279,7 @@
           <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
             <input id="allowSingles" type="checkbox" />
             <label for="allowSingles" style="margin:0; color:rgba(11,18,32,0.85); font-weight:700;">
-              단식 경기 섞기
+              단식경기가 있다면 체크
             </label>
           </div>
 
