@@ -78,15 +78,14 @@
     }
 
     .wrap{ max-width: 1100px; margin: 0 auto; padding-top: 10px; }
-    h1{
-      margin: 0 0 14px;
-      font-size: 26px;
-      font-weight: 900;
-      letter-spacing: 0.2px;
-      color: #ffffff;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.25);
-    }
-
+ h1{
+  margin: 0 0 14px;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  color: #0B3C8A;          /* ← 짙은 파란색 */
+  text-shadow: none;      /* ← 밝은 배경이니 그림자 제거 */
+}
     .grid{ display: grid; grid-template-columns: 1fr; gap: 14px; }
     @media (min-width: 980px){ .grid{ grid-template-columns: 1.15fr 0.85fr; } }
 
