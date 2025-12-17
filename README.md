@@ -1,7 +1,8 @@
-<html lang="ko">
+<html lang="ko" translate="no">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="google" content="notranslate">
   <title>LET's PICK THE SPOOON</title>
 
   <style>
