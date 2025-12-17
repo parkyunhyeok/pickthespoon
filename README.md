@@ -9,6 +9,7 @@
   --text:#082f6b;
   --muted:#64748b;
   --warn:#f59e0b;
+  --ok:#22c55e;
 
   /* RKS x Samsung Blue */
   --blue-sky:#6EC6FF;
@@ -78,7 +79,8 @@ body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; marg
       <div class="card">
         <div class="split">
           <div>
-            <label for="names">참여자 이름(쉼표로 구분)</label>
+            <label for="names" class="strong-label">참여자 이름(쉼표로 구분)</label>
+            .strong-label { font-weight: 900; font-size: 15px; color: var(--text); }
             <textarea id="names" placeholder="예)&#10;강성준&#10;김늠름&#10;고원섭&#10;송준영"></textarea>
             <div class="hint">
               * 1경기 = 4명(복식 기준)으로 조 편성<br/>
