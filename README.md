@@ -271,7 +271,7 @@
           <div style="display:flex; gap:8px; align-items:center; margin-top:18px;">
             <input id="enforceNoRepeatRest" type="checkbox" checked />
             <label for="enforceNoRepeatRest" style="margin:0; color:rgba(11,18,32,0.85); font-weight:700;">
-              직전 휴식자는 이번 휴식자에서 제외(가능한 경우 강제)
+              휴식자 경기에 배정하기
             </label>
           </div>
 
@@ -279,7 +279,7 @@
           <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
             <input id="allowSingles" type="checkbox" />
             <label for="allowSingles" style="margin:0; color:rgba(11,18,32,0.85); font-weight:700;">
-              단식 경기 섞기 허용 (가능하면 휴식 최소화)
+              단식 경기 섞기
             </label>
           </div>
 
