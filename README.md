@@ -1,4 +1,3 @@
-
 <html lang="ko" translate="no">
 <head>
   <meta charset="utf-8" />
@@ -31,7 +30,6 @@
       --card-bg-strong: rgba(255,255,255,0.88);
     }
 
-    /* 전체 배경: 연한 회색 */
     body{
       font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       margin: 0;
@@ -40,7 +38,6 @@
       background: var(--page-bg);
     }
 
-    /* ✅ 최상단 회색 그라데이션 + 워터마크 */
     body::before{
       content:"LET'S PLAY RKS";
       position: fixed;
@@ -48,7 +45,6 @@
       left: 0;
       width: 100%;
       height: 330px;
-
       background: var(--top-grad);
 
       display: flex;
@@ -65,11 +61,9 @@
 
       pointer-events: none;
       user-select: none;
-
-      z-index: 0; /* ✅ 워터마크 보이게 */
+      z-index: 0;
     }
 
-    /* 실제 콘텐츠는 워터마크 위 */
     .wrap{
       max-width: 1100px;
       margin: 0 auto;
@@ -95,7 +89,6 @@
 
     .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
 
-    /* 앱 느낌 카드 */
     .card{
       border: 1px solid rgba(255,255,255,0.55);
       border-radius: 18px;
@@ -133,7 +126,6 @@
       margin-bottom:6px;
     }
 
-    /* 필수 입력 안내(굵게) */
     .label-required{
       font-weight: 900;
       font-size: 15px;
@@ -254,7 +246,7 @@
             <label for="names" class="label-required">참여자 이름(쉼표로 구분)</label>
             <textarea id="names" placeholder="예)성준, 늠름, 원섭, 준영"></textarea>
             <div class="hint">
-              * 1경기 = 4명(복식 기준)으로 조 편성
+              * 코트 기준으로 조가 생성됩니다. (복식=4명, 단식=2명)
             </div>
           </div>
 
@@ -280,6 +272,14 @@
             <input id="enforceNoRepeatRest" type="checkbox" checked />
             <label for="enforceNoRepeatRest" style="margin:0; color:rgba(11,18,32,0.85); font-weight:700;">
               직전 휴식자는 이번 휴식자에서 제외(가능한 경우 강제)
+            </label>
+          </div>
+
+          <!-- ✅ 추가: 단식 섞기 옵션 -->
+          <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
+            <input id="allowSingles" type="checkbox" />
+            <label for="allowSingles" style="margin:0; color:rgba(11,18,32,0.85); font-weight:700;">
+              단식 경기 섞기 허용 (가능하면 휴식 최소화)
             </label>
           </div>
 
@@ -345,16 +345,44 @@
       return s;
     }
 
-    function makeRound(names, prevRest, courts, seedValue, enforce=true) {
-      const groupSize = 4;
+    /**
+     * - 기본: 복식(4명)만 사용
+     * - allowSingles=true: 코트 내에 단식(2명)도 섞어 "휴식 최소화"를 우선
+     *
+     * 예) courts=3, n=11, allowSingles=true
+     *    -> playCount = 10 (복식 2코트=8명 + 단식 1코트=2명), rest=1
+     */
+    function makeRound(names, prevRest, courts, seedValue, enforce=true, allowSingles=false) {
       const n = names.length;
-      const maxPlayersByCourts = Math.max(0, courts) * groupSize;
-      const maxPlayersByPeople = Math.floor(n / groupSize) * groupSize;
-      const playCount = Math.min(maxPlayersByCourts, maxPlayersByPeople);
-      const restCount = n - playCount;
 
       const rand = (seedValue !== null && seedValue !== "") ? mulberry32(Number(seedValue)) : Math.random;
 
+      // ✅ 이번 라운드 참여 인원 계산
+      // - 복식만: 4의 배수로만 참여, 최대 courts*4
+      // - 단식 허용: 목표 참여 = min(n - (n%2?1:0), courts*4) 이되, 최소 courts*2 보장(가능하면)
+      let playCount;
+
+      if (!allowSingles) {
+        const groupSize = 4;
+        const maxPlayersByCourts = Math.max(0, courts) * groupSize;
+        const maxPlayersByPeople = Math.floor(n / groupSize) * groupSize;
+        playCount = Math.min(maxPlayersByCourts, maxPlayersByPeople);
+      } else {
+        const maxPlayers = Math.max(0, courts) * 4;
+        const minPlayers = Math.max(0, courts) * 2;
+
+        // 가능한 한 많이 참여(단식이면 2명 단위가 자연스러우니 짝수로 맞춤)
+        const target = Math.min(n, maxPlayers);
+        const evenTarget = target - (target % 2); // 홀수면 1명은 휴식으로 남김
+
+        playCount = Math.max(minPlayers, evenTarget);
+        playCount = Math.min(playCount, maxPlayers, n); // 안전장치
+        playCount = playCount - (playCount % 2);        // 최종 짝수 보장
+      }
+
+      const restCount = n - playCount;
+
+      // ✅ 연속 휴식 방지 고려하여 rest/players 분리
       const prevSet = new Set(prevRest);
       const eligibleRest = [];
       const ineligibleRest = [];
@@ -392,12 +420,31 @@
         }
       }
 
+      // ✅ 그룹 만들기
+      // - 복식만: 4명씩
+      // - 단식 허용: 가능한 한 4명 그룹을 만들고, 남는 2명은 단식으로 1코트 구성
       const groups = [];
-      for (let i = 0; i < players.length; i += groupSize) {
-        groups.push(players.slice(i, i + groupSize));
+
+      if (!allowSingles) {
+        for (let i = 0; i < players.length; i += 4) {
+          groups.push(players.slice(i, i + 4));
+        }
+      } else {
+        // 1) 먼저 4명 그룹 최대한 만들기
+        const fours = players.length - (players.length % 4); // 0,4,8,12...
+        for (let i = 0; i < fours; i += 4) {
+          groups.push(players.slice(i, i + 4));
+        }
+        // 2) 남는 2명 있으면 단식
+        const remaining = players.slice(fours);
+        if (remaining.length === 2) groups.push(remaining);
       }
 
-      return { groups, rest, playCount, restCount, warning };
+      // ✅ (표시용) 복식/단식 코트 수 계산
+      const doublesCourts = groups.filter(g => g.length === 4).length;
+      const singlesCourts = groups.filter(g => g.length === 2).length;
+
+      return { groups, rest, playCount, restCount, warning, doublesCourts, singlesCourts };
     }
 
     function render(groups, rest) {
@@ -408,8 +455,9 @@
         const box = document.createElement("div");
         box.className = "group";
 
+        const type = members.length === 2 ? "단식" : "복식";
         const h = document.createElement("h3");
-        h.innerHTML = `<span>${groupLabel(idx)}조</span><span class="badge">${members.length}명</span>`;
+        h.innerHTML = `<span>${groupLabel(idx)}조 (${type})</span><span class="badge">${members.length}명</span>`;
         box.appendChild(h);
 
         members.forEach(name => {
@@ -442,7 +490,10 @@
     }
 
     function toText(groups, rest) {
-      const lines = groups.map((members, idx) => `${groupLabel(idx)}조: ${members.join(", ")}`);
+      const lines = groups.map((members, idx) => {
+        const type = members.length === 2 ? "단식" : "복식";
+        return `${groupLabel(idx)}조(${type}): ${members.join(", ")}`;
+      });
       if (rest.length > 0) lines.push(`휴식자: ${rest.join(", ")}`);
       return lines.join("\n");
     }
@@ -452,6 +503,7 @@
     const courtsEl = document.getElementById("courts");
     const seedEl = document.getElementById("seed");
     const enforceEl = document.getElementById("enforceNoRepeatRest");
+    const allowSinglesEl = document.getElementById("allowSingles");
     const summaryEl = document.getElementById("summary");
     const statusEl = document.getElementById("status");
     const toastEl = document.getElementById("toast");
@@ -464,6 +516,7 @@
       const courts = Math.max(1, Number(courtsEl.value || 1));
       const seedValue = seedEl.value;
       const enforce = enforceEl.checked;
+      const allowSingles = allowSinglesEl.checked;
 
       statusEl.textContent = "";
       statusEl.className = "status";
@@ -479,22 +532,23 @@
       const prevRest = prevRestRaw.filter(n => nameSet.has(n));
       const ignored = prevRestRaw.filter(n => !nameSet.has(n));
 
-      const { groups, rest, playCount, restCount, warning } =
-        makeRound(names, prevRest, courts, seedValue, enforce);
+      const { groups, rest, playCount, restCount, warning, doublesCourts, singlesCourts } =
+        makeRound(names, prevRest, courts, seedValue, enforce, allowSingles);
 
       render(groups, rest);
       latestText = toText(groups, rest);
 
       // ✅ 팀 매칭 후 결과 카드로 자동 스크롤(더 안정적)
-     requestAnimationFrame(() => {
-     document.getElementById("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
-     });
+      requestAnimationFrame(() => {
+        document.getElementById("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
 
+      const courtInfo = allowSingles
+        ? ` / 복식 ${doublesCourts}코트 + 단식 ${singlesCourts}코트`
+        : "";
 
-
-      
       summaryEl.textContent =
-        `총 ${names.length}명 / 코트 ${courts}개 → 참여 ${playCount}명(4인조 ${groups.length}개), 휴식 ${restCount}명`;
+        `총 ${names.length}명 / 코트 ${courts}개${courtInfo} → 참여 ${playCount}명, 휴식 ${restCount}명`;
 
       if (ignored.length > 0) {
         statusEl.textContent = `참고: 휴식자 입력 중 참여자 목록에 없는 이름은 무시했어요 → ${ignored.join(", ")}`;
@@ -516,6 +570,7 @@
       courtsEl.value = 3;
       seedEl.value = "";
       enforceEl.checked = true;
+      allowSinglesEl.checked = false;
       document.getElementById("output").innerHTML = "";
       summaryEl.textContent = "아직 조 편성을 하지 않았어요.";
       statusEl.textContent = "";
