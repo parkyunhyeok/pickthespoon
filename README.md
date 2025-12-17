@@ -70,6 +70,8 @@
     }
 
     /* 실제 콘텐츠는 워터마크 위 */
+    <div class="brand" translate="no">pickthespoon</div>
+
     .wrap{
       max-width: 1100px;
       margin: 0 auto;
@@ -77,6 +79,21 @@
       position: relative;
       z-index: 1;
     }
+
+    .brand{
+    position: fixed;
+    top: 12px;
+    right: 16px;          /* 왼쪽에 두고 싶으면 right 대신 left */
+    z-index: 3;           /* wrap(1) + 워터마크(0)보다 위 */
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: rgba(11, 60, 138, 0.55);
+    pointer-events: none; /* 클릭 방해 X */
+    user-select: none;
+    }
+
 
     h1{
       margin: 0 0 14px;
