@@ -483,9 +483,16 @@
         makeRound(names, prevRest, courts, seedValue, enforce);
 
       render(groups, rest);
-
       latestText = toText(groups, rest);
 
+      // ✅ 팀 매칭 후 결과 카드로 자동 스크롤(더 안정적)
+     requestAnimationFrame(() => {
+     document.getElementById("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
+     });
+
+
+
+      
       summaryEl.textContent =
         `총 ${names.length}명 / 코트 ${courts}개 → 참여 ${playCount}명(4인조 ${groups.length}개), 휴식 ${restCount}명`;
 
