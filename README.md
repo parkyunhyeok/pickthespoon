@@ -147,6 +147,12 @@
       margin-left: 6px;
     }
 
+.label-strong{
+  font-weight: 800;
+  font-size: 14px;
+  color: #0b1220;
+}
+
     input[type="number"]{
       width: 120px;
       padding: 8px 10px;
@@ -253,8 +259,8 @@
           </div>
 
           <div>
-            <label for="prevRest">휴식자 입력</label>
-            <textarea id="prevRest" class="small" placeholder="예)&#10;서한솔&#10;누리"></textarea>
+            <label for="prevRest" class="label-strong">휴식자 입력</label>
+            <textarea id="prevRest" class="small" placeholder="예)#10;한솔#10;누리"></textarea>
             <div class="hint">* 휴식자는 이번 경기에는 ‘참여자’로 배정</div>
           </div>
         </div>
@@ -266,7 +272,7 @@
           </div>
 
           <div>
-            <label for="seed">구분번호(필수X)</label>
+            <label for="seed" class="label-strong">구분번호(필수X)</label>
             <input id="seed" class="mono" type="number" placeholder="예: 1234" />
           </div>
 
