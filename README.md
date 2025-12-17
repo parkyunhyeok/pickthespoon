@@ -47,7 +47,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 220px;
+      height: 330px;
 
       background: var(--top-grad);
 
