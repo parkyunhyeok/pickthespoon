@@ -252,7 +252,7 @@
         <div class="split">
           <div>
             <label for="names" class="label-required">참여자 이름(쉼표로 구분)</label>
-            <textarea id="names" placeholder="예)#10;성준#10;늠름#10;원섭#10;준영"></textarea>
+            <textarea id="names" placeholder="예);성준,;늠름,;원섭,;준영"></textarea>
             <div class="hint">
               * 1경기 = 4명(복식 기준)으로 조 편성
             </div>
@@ -260,7 +260,7 @@
 
           <div>
             <label for="prevRest" class="label-strong">휴식자 입력</label>
-            <textarea id="prevRest" class="small" placeholder="예)#10;한솔#10;누리"></textarea>
+            <textarea id="prevRest" class="small" placeholder="예);한솔,;누리"></textarea>
             <div class="hint">* 휴식자는 이번 경기에는 ‘참여자’로 배정</div>
           </div>
         </div>
@@ -272,7 +272,7 @@
           </div>
 
           <div>
-            <label for="seed" class="label-strong">구분번호(필수X)</label>
+            <label for="seed" class="label-strong">구분번호</label>
             <input id="seed" class="mono" type="number" placeholder="예: 1234" />
           </div>
 
