@@ -43,8 +43,13 @@
     }
 
     /* ✅ 최상단만 그라데이션 포인트 */
-    body::before{
-      content:"LET'S PLAY RKS";
+    
+    #f3f4f6 0%,
+    #e5e7eb 100%
+  );
+
+  body::before{
+  content:"LET'S PLAY RKS";
   position: fixed;
   top: 0;
   left: 0;
@@ -64,12 +69,16 @@
   font-size: 56px;
   font-weight: 900;
   letter-spacing: 6px;
-  color: rgba(11, 60, 138, 0.08); /* 삼성블루 느낌의 워터마크 */
-  text-transform: uppercase;
+  font-style: italic;          /* ✅ 기울이기 */
+  transform: rotate(-6deg);    /* ✅ 워터마크 느낌 */
+  color: rgba(11, 60, 138, 0.07);
 
+  text-transform: uppercase;
   z-index: -1;
   pointer-events: none;
 }
+
+  
       top: 0; left: 0;
       width: 100%;
       height: 50px; /* 포인트 높이 (원하면 180~260px 조절) */
