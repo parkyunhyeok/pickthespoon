@@ -55,12 +55,12 @@
       align-items: center;
       justify-content: center;
 
-      font-size: 56px;
-      font-weight: 900;
+      font-size: 80px;
+      font-weight: 1200;
       letter-spacing: 6px;
       font-style: italic;
       transform: rotate(-6deg);
-      color: rgba(11, 60, 138, 0.12);
+      color: rgba(11, 80, 138, 0.12);
       text-transform: uppercase;
 
       pointer-events: none;
