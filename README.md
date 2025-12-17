@@ -232,6 +232,33 @@
     .copyline{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
     .toast{ color: var(--ok); font-size: 13px; display:none; }
+
+    /* 체크박스는 세로로 정렬 */
+.controls{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* 체크박스 한 줄 */
+.checkline{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 버튼은 한 줄, 모바일에서도 반반 */
+.btnbar{
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btnbar button{
+  flex: 1;
+}
+
   </style>
 </head>
 
@@ -276,16 +303,29 @@
           </div>
 
           <!-- ✅ 추가: 단식 섞기 옵션 -->
-          <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
-            <input id="allowSingles" type="checkbox" />
-            <label for="allowSingles" style="margin:0; color:rgba(11,18,32,0.85); font-weight:700;">
-              단식경기가 있다면 체크
-            </label>
-          </div>
+          <!-- 체크박스 영역 -->
+<div class="controls">
+  <div class="checkline">
+    <input id="enforceNoRepeatRest" type="checkbox" checked />
+    <label for="enforceNoRepeatRest">
+      휴식자 경기에 배정하기
+    </label>
+  </div>
 
-          <button id="btnMake">팀 매칭</button>
-          <button id="btnReset" class="secondary">초기화</button>
-        </div>
+  <div class="checkline">
+    <input id="hasSingles" type="checkbox" />
+    <label for="hasSingles">
+      단식경기가 있다면 체크
+    </label>
+  </div>
+</div>
+
+<!-- 버튼 영역 -->
+<div class="btnbar">
+  <button id="btnMake">팀 매칭</button>
+  <button id="btnReset" class="secondary">초기화</button>
+</div>
+
 
         <div id="status" class="status"></div>
       </div>
