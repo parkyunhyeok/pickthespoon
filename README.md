@@ -246,7 +246,7 @@
         <div class="split">
           <div>
             <label for="names" class="label-required">참여자 이름(쉼표로 구분)</label>
-            <textarea id="names" placeholder="예)&#10;강성준&#10;김늠름&#10;고원섭&#10;송준영"></textarea>
+            <textarea id="names" placeholder="예)#10;성준#10;늠름#10;원섭#10;준영"></textarea>
             <div class="hint">
               * 1경기 = 4명(복식 기준)으로 조 편성
             </div>
