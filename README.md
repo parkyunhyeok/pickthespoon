@@ -1,3 +1,4 @@
+<!doctype html>
 <html lang="ko" translate="no">
 <head>
   <meta charset="utf-8" />
@@ -7,19 +8,15 @@
 
   <style>
     :root{
-      /* Brand */
       --blue-sky:#6EC6FF;
       --blue-samsung:#0B3C8A;
       --blue-dark:#081A33;
 
-      /* Background */
       --page-bg:#f3f4f6;
       --top-grad: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
       --grad-blue: linear-gradient(135deg, #6EC6FF 0%, #0B3C8A 100%);
 
-      /* UI */
       --border-soft: rgba(11,60,138,0.12);
-
       --text:#0b1220;
       --muted:#5b6475;
 
@@ -41,16 +38,12 @@
     body::before{
       content:"LET'S PLAY RKS";
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 330px;
+      top: 0; left: 0;
+      width: 100%; height: 330px;
       background: var(--top-grad);
-
       display: flex;
       align-items: center;
       justify-content: center;
-
       font-size: 56px;
       font-weight: 900;
       letter-spacing: 10px;
@@ -58,28 +51,13 @@
       transform: rotate(-6deg);
       color: rgba(11, 80, 138, 0.12);
       text-transform: uppercase;
-
       pointer-events: none;
       user-select: none;
       z-index: 0;
     }
 
-    .wrap{
-      max-width: 1100px;
-      margin: 0 auto;
-      padding-top: 10px;
-      position: relative;
-      z-index: 1;
-    }
-
-    h1{
-      margin: 0 0 14px;
-      font-size: 26px;
-      font-weight: 900;
-      letter-spacing: 0.2px;
-      color: var(--blue-samsung);
-      text-shadow: none;
-    }
+    .wrap{ max-width: 1100px; margin: 0 auto; padding-top: 10px; position: relative; z-index: 1; }
+    h1{ margin: 0 0 14px; font-size: 26px; font-weight: 900; letter-spacing: 0.2px; color: var(--blue-samsung); }
 
     .grid{ display: grid; grid-template-columns: 1fr; gap: 14px; }
     @media (min-width: 980px){ .grid{ grid-template-columns: 1.15fr 0.85fr; } }
@@ -119,31 +97,10 @@
     }
     .small{ min-height: 120px; }
 
-    label{
-      font-size: 13px;
-      color: var(--muted);
-      display:block;
-      margin-bottom:6px;
-    }
-
-    .label-required{
-      font-weight: 900;
-      font-size: 15px;
-      color: #0b1220;
-    }
-    .label-required::after{
-      content:" (필수)";
-      font-weight: 800;
-      font-size: 12px;
-      color: var(--blue-samsung);
-      margin-left: 6px;
-    }
-
-    .label-strong{
-      font-weight: 800;
-      font-size: 14px;
-      color: #0b1220;
-    }
+    label{ font-size: 13px; color: var(--muted); display:block; margin-bottom:6px; }
+    .label-required{ font-weight: 900; font-size: 15px; color: #0b1220; }
+    .label-required::after{ content:" (필수)"; font-weight: 800; font-size: 12px; color: var(--blue-samsung); margin-left: 6px; }
+    .label-strong{ font-weight: 800; font-size: 14px; color: #0b1220; }
 
     input[type="number"]{
       width: 120px;
@@ -233,32 +190,42 @@
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
     .toast{ color: var(--ok); font-size: 13px; display:none; }
 
-    /* 체크박스는 세로로 정렬 */
-.controls{
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 12px;
-}
+    /* ✅ 체크박스 영역 */
+    .controls{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .checkline{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .checkline label{
+      margin: 0;
+      display: inline; /* 줄바꿈 덜 나게 */
+      color: rgba(11,18,32,0.85);
+      font-weight: 700;
+    }
 
-/* 체크박스 한 줄 */
-.checkline{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* 버튼은 한 줄, 모바일에서도 반반 */
-.btnbar{
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.btnbar button{
-  flex: 1;
-}
-
+    /* ✅ 버튼 영역 */
+    .btnbar{
+      display:flex;
+      gap:10px;
+      margin-top:14px;
+      flex-wrap: nowrap;
+    }
+    .btnbar button{
+      flex:1;
+      white-space: nowrap; /* ✅ '팀 매칭' 줄바꿈 방지 */
+    }
+    @media (max-width: 360px){
+      .btnbar button{
+        font-size: 13px;
+        padding: 10px 12px;
+      }
+    }
   </style>
 </head>
 
@@ -272,9 +239,7 @@
           <div>
             <label for="names" class="label-required">참여자 이름(쉼표로 구분)</label>
             <textarea id="names" placeholder="예)성준, 늠름, 원섭, 준영"></textarea>
-            <div class="hint">
-              * 코트 기준으로 조가 생성됩니다. (복식=4명, 단식=2명)
-            </div>
+            <div class="hint">* 코트 기준으로 조가 생성됩니다. (복식=4명, 단식=2명)</div>
           </div>
 
           <div>
@@ -294,38 +259,25 @@
             <label for="seed" class="label-strong">구분번호</label>
             <input id="seed" class="mono" type="number" placeholder="예: 1234" />
           </div>
+        </div>
 
-          <div style="display:flex; gap:8px; align-items:center; margin-top:18px;">
+        <!-- ✅ 체크박스: 중복 없이 여기만 사용 -->
+        <div class="controls">
+          <div class="checkline">
             <input id="enforceNoRepeatRest" type="checkbox" checked />
-            <label for="enforceNoRepeatRest" style="margin:0; color:rgba(11,18,32,0.85); font-weight:700;">
-              휴식자 경기에 배정하기
-            </label>
+            <label for="enforceNoRepeatRest">휴식자 경기에 배정하기</label>
           </div>
 
-          <!-- ✅ 추가: 단식 섞기 옵션 -->
-          <!-- 체크박스 영역 -->
-<div class="controls">
-  <div class="checkline">
-    <input id="enforceNoRepeatRest" type="checkbox" checked />
-    <label for="enforceNoRepeatRest">
-      휴식자 경기에 배정하기
-    </label>
-  </div>
+          <div class="checkline">
+            <input id="allowSingles" type="checkbox" />
+            <label for="allowSingles">단식경기가 있다면 체크</label>
+          </div>
+        </div>
 
-  <div class="checkline">
-    <input id="hasSingles" type="checkbox" />
-    <label for="hasSingles">
-      단식경기가 있다면 체크
-    </label>
-  </div>
-</div>
-
-<!-- 버튼 영역 -->
-<div class="btnbar">
-  <button id="btnMake">팀 매칭</button>
-  <button id="btnReset" class="secondary">초기화</button>
-</div>
-
+        <div class="btnbar">
+          <button id="btnMake">팀 매칭</button>
+          <button id="btnReset" class="secondary">초기화</button>
+        </div>
 
         <div id="status" class="status"></div>
       </div>
@@ -359,11 +311,10 @@
       };
     }
 
+    const $ = (id) => document.getElementById(id);
+
     function parseNames(raw) {
-      return raw
-        .split(/[\n,;\t]+/g)
-        .map(s => s.trim())
-        .filter(Boolean);
+      return raw.split(/[\n,;\t]+/g).map(s => s.trim()).filter(Boolean);
     }
 
     function shuffle(arr, rand=Math.random) {
@@ -385,50 +336,33 @@
       return s;
     }
 
-    /**
-     * - 기본: 복식(4명)만 사용
-     * - allowSingles=true: 코트 내에 단식(2명)도 섞어 "휴식 최소화"를 우선
-     *
-     * 예) courts=3, n=11, allowSingles=true
-     *    -> playCount = 10 (복식 2코트=8명 + 단식 1코트=2명), rest=1
-     */
     function makeRound(names, prevRest, courts, seedValue, enforce=true, allowSingles=false) {
       const n = names.length;
-
       const rand = (seedValue !== null && seedValue !== "") ? mulberry32(Number(seedValue)) : Math.random;
 
-      // ✅ 이번 라운드 참여 인원 계산
-      // - 복식만: 4의 배수로만 참여, 최대 courts*4
-      // - 단식 허용: 목표 참여 = min(n - (n%2?1:0), courts*4) 이되, 최소 courts*2 보장(가능하면)
       let playCount;
 
       if (!allowSingles) {
-        const groupSize = 4;
-        const maxPlayersByCourts = Math.max(0, courts) * groupSize;
-        const maxPlayersByPeople = Math.floor(n / groupSize) * groupSize;
+        const maxPlayersByCourts = courts * 4;
+        const maxPlayersByPeople = Math.floor(n / 4) * 4;
         playCount = Math.min(maxPlayersByCourts, maxPlayersByPeople);
       } else {
-        const maxPlayers = Math.max(0, courts) * 4;
-        const minPlayers = Math.max(0, courts) * 2;
-
-        // 가능한 한 많이 참여(단식이면 2명 단위가 자연스러우니 짝수로 맞춤)
+        const maxPlayers = courts * 4;
+        const minPlayers = courts * 2;
         const target = Math.min(n, maxPlayers);
-        const evenTarget = target - (target % 2); // 홀수면 1명은 휴식으로 남김
-
+        const evenTarget = target - (target % 2);
         playCount = Math.max(minPlayers, evenTarget);
-        playCount = Math.min(playCount, maxPlayers, n); // 안전장치
-        playCount = playCount - (playCount % 2);        // 최종 짝수 보장
+        playCount = Math.min(playCount, maxPlayers, n);
+        playCount = playCount - (playCount % 2);
       }
 
       const restCount = n - playCount;
 
-      // ✅ 연속 휴식 방지 고려하여 rest/players 분리
       const prevSet = new Set(prevRest);
       const eligibleRest = [];
       const ineligibleRest = [];
-      for (const name of names) {
-        (prevSet.has(name) ? ineligibleRest : eligibleRest).push(name);
-      }
+
+      for (const name of names) (prevSet.has(name) ? ineligibleRest : eligibleRest).push(name);
 
       shuffle(eligibleRest, rand);
       shuffle(ineligibleRest, rand);
@@ -444,7 +378,7 @@
         rest = all.slice(playCount);
       } else {
         if (eligibleRest.length < restCount) {
-          warning = "⚠️ 이번 라운드 휴식 인원이 많아 ‘직전 휴식자 연속 휴식 금지’를 완전히 만족할 수 없습니다. (직전 휴식자 일부가 휴식에 포함될 수 있어요)";
+          warning = "⚠️ 이번 라운드 휴식 인원이 많아 ‘직전 휴식자 연속 휴식 금지’를 완전히 만족할 수 없습니다.";
           rest = eligibleRest.slice(0);
           rest = rest.concat(ineligibleRest.slice(0, restCount - rest.length));
 
@@ -460,27 +394,16 @@
         }
       }
 
-      // ✅ 그룹 만들기
-      // - 복식만: 4명씩
-      // - 단식 허용: 가능한 한 4명 그룹을 만들고, 남는 2명은 단식으로 1코트 구성
       const groups = [];
-
       if (!allowSingles) {
-        for (let i = 0; i < players.length; i += 4) {
-          groups.push(players.slice(i, i + 4));
-        }
+        for (let i = 0; i < players.length; i += 4) groups.push(players.slice(i, i + 4));
       } else {
-        // 1) 먼저 4명 그룹 최대한 만들기
-        const fours = players.length - (players.length % 4); // 0,4,8,12...
-        for (let i = 0; i < fours; i += 4) {
-          groups.push(players.slice(i, i + 4));
-        }
-        // 2) 남는 2명 있으면 단식
+        const fours = players.length - (players.length % 4);
+        for (let i = 0; i < fours; i += 4) groups.push(players.slice(i, i + 4));
         const remaining = players.slice(fours);
         if (remaining.length === 2) groups.push(remaining);
       }
 
-      // ✅ (표시용) 복식/단식 코트 수 계산
       const doublesCourts = groups.filter(g => g.length === 4).length;
       const singlesCourts = groups.filter(g => g.length === 2).length;
 
@@ -488,7 +411,7 @@
     }
 
     function render(groups, rest) {
-      const out = document.getElementById("output");
+      const out = $("output");
       out.innerHTML = "";
 
       groups.forEach((members, idx) => {
@@ -538,19 +461,19 @@
       return lines.join("\n");
     }
 
-    const namesEl = document.getElementById("names");
-    const prevRestEl = document.getElementById("prevRest");
-    const courtsEl = document.getElementById("courts");
-    const seedEl = document.getElementById("seed");
-    const enforceEl = document.getElementById("enforceNoRepeatRest");
-    const allowSinglesEl = document.getElementById("allowSingles");
-    const summaryEl = document.getElementById("summary");
-    const statusEl = document.getElementById("status");
-    const toastEl = document.getElementById("toast");
+    const namesEl = $("names");
+    const prevRestEl = $("prevRest");
+    const courtsEl = $("courts");
+    const seedEl = $("seed");
+    const enforceEl = $("enforceNoRepeatRest");
+    const allowSinglesEl = $("allowSingles");
+    const summaryEl = $("summary");
+    const statusEl = $("status");
+    const toastEl = $("toast");
 
     let latestText = "";
 
-    document.getElementById("btnMake").addEventListener("click", () => {
+    $("btnMake").addEventListener("click", () => {
       const names = parseNames(namesEl.value);
       const prevRestRaw = parseNames(prevRestEl.value);
       const courts = Math.max(1, Number(courtsEl.value || 1));
@@ -563,7 +486,7 @@
 
       if (names.length === 0) {
         summaryEl.textContent = "이름을 먼저 입력해줘.";
-        document.getElementById("output").innerHTML = "";
+        $("output").innerHTML = "";
         latestText = "";
         return;
       }
@@ -578,17 +501,12 @@
       render(groups, rest);
       latestText = toText(groups, rest);
 
-      // ✅ 팀 매칭 후 결과 카드로 자동 스크롤(더 안정적)
       requestAnimationFrame(() => {
-        document.getElementById("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
+        $("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
       });
 
-      const courtInfo = allowSingles
-        ? ` / 복식 ${doublesCourts}코트 + 단식 ${singlesCourts}코트`
-        : "";
-
-      summaryEl.textContent =
-        `총 ${names.length}명 / 코트 ${courts}개${courtInfo} → 참여 ${playCount}명, 휴식 ${restCount}명`;
+      const courtInfo = allowSingles ? ` / 복식 ${doublesCourts}코트 + 단식 ${singlesCourts}코트` : "";
+      summaryEl.textContent = `총 ${names.length}명 / 코트 ${courts}개${courtInfo} → 참여 ${playCount}명, 휴식 ${restCount}명`;
 
       if (ignored.length > 0) {
         statusEl.textContent = `참고: 휴식자 입력 중 참여자 목록에 없는 이름은 무시했어요 → ${ignored.join(", ")}`;
@@ -604,14 +522,14 @@
       }
     });
 
-    document.getElementById("btnReset").addEventListener("click", () => {
+    $("btnReset").addEventListener("click", () => {
       namesEl.value = "";
       prevRestEl.value = "";
       courtsEl.value = 3;
       seedEl.value = "";
       enforceEl.checked = true;
       allowSinglesEl.checked = false;
-      document.getElementById("output").innerHTML = "";
+      $("output").innerHTML = "";
       summaryEl.textContent = "아직 조 편성을 하지 않았어요.";
       statusEl.textContent = "";
       statusEl.className = "status";
@@ -619,7 +537,7 @@
       toastEl.style.display = "none";
     });
 
-    document.getElementById("btnCopy").addEventListener("click", async () => {
+    $("btnCopy").addEventListener("click", async () => {
       if (!latestText) return;
       try {
         await navigator.clipboard.writeText(latestText);
