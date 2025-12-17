@@ -4,8 +4,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LET's PICK THE SPOOON</title>
   <style>
-    :root { --border:#e5e7eb; --text:#111827; --muted:#6b7280; --warn:#b45309; --ok:#065f46; }
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; color: var(--text); }
+:root {
+  --border:#dbeafe;
+  --text:#082f6b;
+  --muted:#64748b;
+  --warn:#f59e0b;
+
+  /* RKS x Samsung Blue */
+  --blue-sky:#6EC6FF;
+  --blue-samsung:#0B3C8A;
+  --blue-deep:#082F6B;
+
+  /* 포인트용 그라데이션 */
+  --grad-blue: linear-gradient(135deg, #6EC6FF 0%, #0B3C8A 100%);
+}
+body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; color: var(--text); }
     .wrap { max-width: 1100px; margin: 0 auto; }
     h1 { font-size: 22px; margin: 0 0 12px; }
     .grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
