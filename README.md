@@ -1,3 +1,4 @@
+<!doctype html>
 <html lang="ko" translate="no">
 <head>
   <meta charset="utf-8" />
@@ -14,13 +15,10 @@
 
       /* Background */
       --page-bg:#f3f4f6;
-      --top-grad: linear-gradient(180deg,#f3f4f6 0%,
-  #e5e7eb 100%);
- );
+      --top-grad: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
       --grad-blue: linear-gradient(135deg, #6EC6FF 0%, #0B3C8A 100%);
 
       /* UI */
-      --border: rgba(255,255,255,0.22);
       --border-soft: rgba(11,60,138,0.12);
 
       --text:#0b1220;
@@ -33,75 +31,62 @@
       --card-bg-strong: rgba(255,255,255,0.88);
     }
 
-    /* ✅ 전체 배경: 연한 회색 */
+    /* 전체 배경: 연한 회색 */
     body{
       font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       margin: 0;
       padding: 24px;
       color: var(--text);
       background: var(--page-bg);
-      position: relative;
     }
 
-    /* ✅ 최상단만 그라데이션 포인트 */
-    
-    #f3f4f6 0%,
-    #e5e7eb 100%
-  );
-
- body::before{
-  content:"LET'S PLAY RKS";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 220px;
-
-  background: linear-gradient(
-    180deg,
-    #f3f4f6 0%,
-    #e5e7eb 100%
-  );
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 56px;
-  font-weight: 900;
-  letter-spacing: 6px;
-  font-style: italic;
-  transform: rotate(-6deg);
-  color: rgba(11, 60, 138, 0.07);
-
-  text-transform: uppercase;
-  pointer-events: none;
-  z-index: 0;     /* ✅ 핵심 수정 */
-}
-
-/* 실제 콘텐츠는 워터마크 위 */
-.wrap{
-  position: relative;
-  z-index: 1;
-}
-
-  
-      top: 0; left: 0;
+    /* ✅ 최상단 회색 그라데이션 + 워터마크 */
+    body::before{
+      content:"LET'S PLAY RKS";
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 50px; /* 포인트 높이 (원하면 180~260px 조절) */
+      height: 220px;
+
       background: var(--top-grad);
-      z-index: -1;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 56px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      font-style: italic;
+      transform: rotate(-6deg);
+      color: rgba(11, 60, 138, 0.12);
+      text-transform: uppercase;
+
+      pointer-events: none;
+      user-select: none;
+
+      z-index: 0; /* ✅ 워터마크 보이게 */
     }
 
-    .wrap{ max-width: 1100px; margin: 0 auto; padding-top: 10px; }
- h1{
-  margin: 0 0 14px;
-  font-size: 26px;
-  font-weight: 900;
-  letter-spacing: 0.2px;
-  color: #0B3C8A;          /* ← 짙은 파란색 */
-  text-shadow: none;      /* ← 밝은 배경이니 그림자 제거 */
-}
+    /* 실제 콘텐츠는 워터마크 위 */
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-top: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1{
+      margin: 0 0 14px;
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      color: var(--blue-samsung);
+      text-shadow: none;
+    }
+
     .grid{ display: grid; grid-template-columns: 1fr; gap: 14px; }
     @media (min-width: 980px){ .grid{ grid-template-columns: 1.15fr 0.85fr; } }
 
@@ -110,7 +95,7 @@
 
     .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
 
-    /* ✅ 앱 느낌 카드 */
+    /* 앱 느낌 카드 */
     .card{
       border: 1px solid rgba(255,255,255,0.55);
       border-radius: 18px;
@@ -148,7 +133,7 @@
       margin-bottom:6px;
     }
 
-    /* ✅ 필수 입력 안내(굵게) */
+    /* 필수 입력 안내(굵게) */
     .label-required{
       font-weight: 900;
       font-size: 15px;
@@ -162,11 +147,11 @@
       margin-left: 6px;
     }
 
-.label-strong{
-  font-weight: 800;
-  font-size: 14px;
-  color: #0b1220;
-}
+    .label-strong{
+      font-weight: 800;
+      font-size: 14px;
+      color: #0b1220;
+    }
 
     input[type="number"]{
       width: 120px;
@@ -324,14 +309,13 @@
   </div>
 
   <script>
-    // ---- Seeded RNG (mulberry32) ----
     function mulberry32(seed) {
       let t = seed >>> 0;
       return function() {
         t += 0x6D2B79F5;
         let r = Math.imul(t ^ (t >>> 15), 1 | t);
         r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
-        return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+        return ((r ^ (t >>> 14)) >>> 0) / 4294967296;
       };
     }
 
@@ -361,17 +345,6 @@
       return s;
     }
 
-    /**
-     * 코트 수를 반영한 조 편성:
-     * - groupSize=4 고정
-     * - 이번 라운드 최대 참여 인원 = courts * 4
-     * - 실제 참여 인원 = min(courts*4, floor(n/4)*4)  (항상 4의 배수로만 참여)
-     * - 휴식자 = n - 실제 참여 인원  (5명 이상 가능)
-     *
-     * 연속 휴식 방지(enforce=true):
-     * - 이번 휴식자(rest)에서 prevRest는 제외(가능한 경우 강제)
-     * - 불가능한 경우(휴식해야 하는 인원이 너무 많아 prevRest 일부가 휴식할 수밖에 없음) 경고 표시
-     */
     function makeRound(names, prevRest, courts, seedValue, enforce=true) {
       const groupSize = 4;
       const n = names.length;
