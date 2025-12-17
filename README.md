@@ -290,7 +290,7 @@
         <div id="status" class="status"></div>
       </div>
 
-      <div class="card">
+      <div class="card" id="resultCard">
         <div class="row" style="justify-content:space-between;">
           <div>
             <div style="font-weight:800; margin-bottom:4px; color: rgba(11,18,32,0.90);">결과</div>
@@ -483,6 +483,7 @@
         makeRound(names, prevRest, courts, seedValue, enforce);
 
       render(groups, rest);
+
       latestText = toText(groups, rest);
 
       summaryEl.textContent =
