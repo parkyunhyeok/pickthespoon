@@ -48,7 +48,7 @@
     #e5e7eb 100%
   );
 
-  body::before{
+ body::before{
   content:"LET'S PLAY RKS";
   position: fixed;
   top: 0;
@@ -69,13 +69,19 @@
   font-size: 56px;
   font-weight: 900;
   letter-spacing: 6px;
-  font-style: italic;          /* ✅ 기울이기 */
-  transform: rotate(-6deg);    /* ✅ 워터마크 느낌 */
+  font-style: italic;
+  transform: rotate(-6deg);
   color: rgba(11, 60, 138, 0.07);
 
   text-transform: uppercase;
-  z-index: -1;
   pointer-events: none;
+  z-index: 0;     /* ✅ 핵심 수정 */
+}
+
+/* 실제 콘텐츠는 워터마크 위 */
+.wrap{
+  position: relative;
+  z-index: 1;
 }
 
   
