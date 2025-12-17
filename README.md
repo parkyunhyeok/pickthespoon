@@ -59,36 +59,34 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>랜덤 조 편성기 (코트 수 반영 + 연속 휴식 방지)</h1>
+    <h1>RKS 팀 매치 메이커</h1>
 
     <div class="grid">
       <div class="card">
         <div class="split">
           <div>
-            <label for="names">참여자 이름 (한 줄에 1명 / 쉼표·세미콜론·탭도 가능)</label>
+            <label for="names">참여자 이름(쉼표로 구분)</label>
             <textarea id="names" placeholder="예)&#10;김철수&#10;이영희&#10;박민수&#10;최지은"></textarea>
             <div class="hint">
-              * 1경기 = 4명(복식 기준)으로 조를 만듭니다.<br/>
-              * 코트 수(동시 경기 수)에 따라 휴식자가 5명 이상 나올 수 있어요.
+              * 1경기 = 4명(복식 기준)으로 조 편성<br/>
             </div>
           </div>
 
           <div>
-            <label for="prevRest">직전 경기 휴식자 (이번 경기엔 휴식 불가)</label>
+            <label for="prevRest">휴식자 입력</label>
             <textarea id="prevRest" class="small" placeholder="예)&#10;이영희&#10;최지은"></textarea>
-            <div class="hint">* 입력된 사람은 가능한 한 이번 라운드에 ‘경기 참여’로 배정됩니다.</div>
+            <div class="hint">* 입력된 사람은 가능한 한 이번 라운드에 ‘경기 참여자’로 배정</div>
           </div>
         </div>
 
         <div class="row" style="margin-top:10px;">
           <div>
-            <label for="courts">코트 수(동시 경기 수)</label>
+            <label for="courts">코트 수</label>
             <input id="courts" type="number" min="1" value="3" />
-            <div class="hint">예) 3코트면 동시에 3경기 → 최대 12명 참여</div>
           </div>
 
           <div>
-            <label for="seed">시드(선택)</label>
+            <label for="seed">구분번호(필수X)</label>
             <input id="seed" class="mono" type="number" placeholder="예: 1234" />
           </div>
 
