@@ -281,7 +281,7 @@
 
 <body>
   <div class="wrap">
-    <h1>RKS 팀 매치 메이커</h1>
+    <h1>🙋PICK THE SPOON</h1>
 
     <div class="grid">
       <div class="card">
