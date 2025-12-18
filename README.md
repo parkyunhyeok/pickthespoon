@@ -1,3 +1,4 @@
+<!doctype html>
 <html lang="ko" translate="no">
 <head>
   <meta charset="utf-8" />
@@ -438,7 +439,7 @@
         rest = all.slice(playCount);
       } else {
         if (eligibleRest.length < restCount) {
-          warning = "⚠️ 이번 라운드 휴식 인원이 많아 ‘직전 휴식자 연속 휴식 금지’를 완전히 만족할 수 없습니다.";
+          warning = "⚠️ 휴식 인원이 너무 많아요";
           rest = eligibleRest.slice(0);
           rest = rest.concat(ineligibleRest.slice(0, restCount - rest.length));
 
@@ -555,6 +556,9 @@
     const dupHintEl = $("dupHint");
     const btnMakeEl = $("btnMake");
 
+    // ✅ "중복 경고를 띄운 상태" 플래그(중복 제거 시 문구 자동 제거용)
+    let dupWarningShown = false;
+
     function getNameStats(raw){
       const all = parseNames(raw);
       const map = new Map();
@@ -571,24 +575,32 @@
     function updateNameUI(){
       const { all, uniqCount, duplicates } = getNameStats(namesEl.value);
 
-      nameCountEl.textContent = `현재 ${uniqCount}명 입력됨 (총 입력 ${all.length})`;
+      nameCountEl.textContent = `현재 ${uniqCount}명`;
 
       if (duplicates.length > 0) {
         namesEl.classList.add("dup");
         dupHintEl.classList.add("dupWarn");
         dupHintEl.textContent = `중복 입력: ${duplicates.join(", ")}`;
 
-        // ✅ 중복이면 팀 매칭 막기(요청했던 "보완" 포함)
         btnMakeEl.disabled = true;
+
         statusEl.textContent = "⚠️ 중복된 이름이 있어요. 중복을 제거하면 팀 매칭이 가능합니다.";
         statusEl.className = "status warn";
+
+        dupWarningShown = true;
       } else {
         namesEl.classList.remove("dup");
         dupHintEl.classList.remove("dupWarn");
         dupHintEl.textContent = "";
 
         btnMakeEl.disabled = false;
-        // status는 여기서 건드리지 않음(팀매칭 결과 메시지 유지)
+
+        // ✅ 중복 경고가 떠 있었던 경우에만 status를 지움 (다른 결과 메시지는 유지)
+        if (dupWarningShown) {
+          statusEl.textContent = "";
+          statusEl.className = "status";
+          dupWarningShown = false;
+        }
       }
     }
 
@@ -673,6 +685,9 @@
       latestText = "";
       toastEl.style.display = "none";
 
+      // ✅ 중복 경고 플래그도 초기화
+      dupWarningShown = false;
+
       updateNameUI();
     });
 
@@ -700,4 +715,3 @@
   </script>
 </body>
 </html>
-```
