@@ -20,6 +20,7 @@
 
       --warn:#f59e0b;
       --ok:#22c55e;
+      --danger:#ef4444;
 
       --card-bg: rgba(255,255,255,0.75);
       --card-bg-strong: rgba(255,255,255,0.88);
@@ -101,6 +102,7 @@
       color: var(--text);
       outline: none;
       box-sizing: border-box;
+      transition: border-color .15s ease, box-shadow .15s ease;
     }
     textarea::placeholder{ color: rgba(11,18,32,0.45); }
     textarea:focus{
@@ -108,6 +110,16 @@
       box-shadow: 0 0 0 3px rgba(110,198,255,0.22);
     }
     .small{ min-height: 120px; }
+
+    /* ✅ 중복 입력 시 textarea 빨간 강조 */
+    textarea.dup{
+      border-color: rgba(239,68,68,0.75);
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.18);
+    }
+    .dupWarn{
+      color: rgba(220,38,38,0.95);
+      font-weight: 800;
+    }
 
     label{
       font-size: 13px;
@@ -171,6 +183,11 @@
       color: var(--blue-samsung);
       border: 1px solid rgba(11,60,138,0.25);
       box-shadow: none;
+    }
+    button:disabled{
+      opacity: .55;
+      cursor: not-allowed;
+      filter: grayscale(0.2);
     }
 
     .hint{ font-size: 13px; color: rgba(11,18,32,0.65); margin-top: 6px; }
@@ -275,8 +292,8 @@
             <label for="names" class="label-required">참여자 이름(쉼표로 구분)</label>
             <textarea id="names" placeholder="예)성준, 늠름, 원섭, 준영"></textarea>
 
-            <!-- ✅ 실시간 인원 카운터 -->
             <div class="hint" id="nameCount">현재 0명 입력됨 (총 입력 0)</div>
+            <div class="hint" id="dupHint"></div>
 
             <div class="hint">* 코트 기준으로 조가 생성됩니다. (복식=4명, 단식=2명)</div>
           </div>
@@ -533,19 +550,58 @@
     const toastEl = $("toast");
     const resultCardEl = $("resultCard");
 
-    /* ✅ 실시간 카운터 */
+    // ✅ 실시간 카운터 + 중복 표시
     const nameCountEl = $("nameCount");
-    function updateNameCount(){
-      const all = parseNames(namesEl.value);
-      const uniq = new Set(all);
-      nameCountEl.textContent = `현재 ${uniq.size}명 입력됨 (총 입력 ${all.length})`;
+    const dupHintEl = $("dupHint");
+    const btnMakeEl = $("btnMake");
+
+    function getNameStats(raw){
+      const all = parseNames(raw);
+      const map = new Map();
+      for (const nm of all) map.set(nm, (map.get(nm) || 0) + 1);
+
+      const duplicates = [];
+      for (const [nm, cnt] of map.entries()) {
+        if (cnt >= 2) duplicates.push(nm); // ✅ 완전 동일 문자열만 중복
+      }
+
+      return { all, uniqCount: map.size, duplicates };
     }
-    namesEl.addEventListener("input", updateNameCount);
-    updateNameCount();
+
+    function updateNameUI(){
+      const { all, uniqCount, duplicates } = getNameStats(namesEl.value);
+
+      nameCountEl.textContent = `현재 ${uniqCount}명 입력됨 (총 입력 ${all.length})`;
+
+      if (duplicates.length > 0) {
+        namesEl.classList.add("dup");
+        dupHintEl.classList.add("dupWarn");
+        dupHintEl.textContent = `중복 입력: ${duplicates.join(", ")}`;
+
+        // ✅ 중복이면 팀 매칭 막기(요청했던 "보완" 포함)
+        btnMakeEl.disabled = true;
+        statusEl.textContent = "⚠️ 중복된 이름이 있어요. 중복을 제거하면 팀 매칭이 가능합니다.";
+        statusEl.className = "status warn";
+      } else {
+        namesEl.classList.remove("dup");
+        dupHintEl.classList.remove("dupWarn");
+        dupHintEl.textContent = "";
+
+        btnMakeEl.disabled = false;
+        // status는 여기서 건드리지 않음(팀매칭 결과 메시지 유지)
+      }
+    }
+
+    namesEl.addEventListener("input", updateNameUI);
+    updateNameUI();
 
     let latestText = "";
 
     $("btnMake").addEventListener("click", () => {
+      // ✅ 클릭 시에도 한번 더 확인(안전)
+      const { duplicates } = getNameStats(namesEl.value);
+      if (duplicates.length > 0) return;
+
       const names = parseNames(namesEl.value);
       const prevRestRaw = parseNames(prevRestEl.value);
       const courts = Math.max(1, Number(courtsEl.value || 1));
@@ -617,7 +673,7 @@
       latestText = "";
       toastEl.style.display = "none";
 
-      updateNameCount(); // ✅ 카운터도 초기화
+      updateNameUI();
     });
 
     $("btnCopy").addEventListener("click", async () => {
@@ -644,3 +700,4 @@
   </script>
 </body>
 </html>
+```
