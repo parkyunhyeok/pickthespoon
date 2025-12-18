@@ -9,7 +9,6 @@
     :root{
       --blue-sky:#6EC6FF;
       --blue-samsung:#0B3C8A;
-      --blue-dark:#081A33;
 
       --page-bg:#f3f4f6;
       --top-grad: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
@@ -55,8 +54,21 @@
       z-index: 0;
     }
 
-    .wrap{ max-width: 1100px; margin: 0 auto; padding-top: 10px; position: relative; z-index: 1; }
-    h1{ margin: 0 0 14px; font-size: 26px; font-weight: 900; letter-spacing: 0.2px; color: var(--blue-samsung); }
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-top: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1{
+      margin: 0 0 14px;
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      color: var(--blue-samsung);
+    }
 
     .grid{ display: grid; grid-template-columns: 1fr; gap: 14px; }
     @media (min-width: 980px){ .grid{ grid-template-columns: 1.15fr 0.85fr; } }
@@ -71,9 +83,9 @@
       border-radius: 18px;
       padding: 16px;
       background: var(--card-bg);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
     }
 
     textarea{
@@ -88,6 +100,7 @@
       background: var(--card-bg-strong);
       color: var(--text);
       outline: none;
+      box-sizing: border-box;
     }
     textarea::placeholder{ color: rgba(11,18,32,0.45); }
     textarea:focus{
@@ -96,10 +109,31 @@
     }
     .small{ min-height: 120px; }
 
-    label{ font-size: 13px; color: var(--muted); display:block; margin-bottom:6px; }
-    .label-required{ font-weight: 900; font-size: 15px; color: #0b1220; }
-    .label-required::after{ content:" (필수)"; font-weight: 800; font-size: 12px; color: var(--blue-samsung); margin-left: 6px; }
-    .label-strong{ font-weight: 800; font-size: 14px; color: #0b1220; }
+    label{
+      font-size: 13px;
+      color: var(--muted);
+      display:block;
+      margin-bottom:6px;
+    }
+
+    .label-required{
+      font-weight: 900;
+      font-size: 15px;
+      color: #0b1220;
+    }
+    .label-required::after{
+      content:" (필수)";
+      font-weight: 800;
+      font-size: 12px;
+      color: var(--blue-samsung);
+      margin-left: 6px;
+    }
+
+    .label-strong{
+      font-weight: 800;
+      font-size: 14px;
+      color: #0b1220;
+    }
 
     input[type="number"]{
       width: 120px;
@@ -110,6 +144,7 @@
       background: var(--card-bg-strong);
       color: var(--text);
       outline: none;
+      box-sizing: border-box;
     }
     input[type="number"]:focus{
       border-color: rgba(11,60,138,0.35);
@@ -189,7 +224,6 @@
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
     .toast{ color: var(--ok); font-size: 13px; display:none; }
 
-    /* ✅ 체크박스 영역 */
     .controls{
       display:flex;
       flex-direction: column;
@@ -203,28 +237,30 @@
     }
     .checkline label{
       margin: 0;
-      display: inline; /* 줄바꿈 덜 나게 */
+      display: inline;
       color: rgba(11,18,32,0.85);
       font-weight: 700;
     }
 
-    /* ✅ 버튼 영역 */
     .btnbar{
       display:flex;
-      gap:10px;
-      margin-top:14px;
+      gap: 10px;
+      margin-top: 14px;
       flex-wrap: nowrap;
     }
     .btnbar button{
-      flex:1;
-      white-space: nowrap; /* ✅ '팀 매칭' 줄바꿈 방지 */
+      flex: 1;
+      white-space: nowrap;
+      min-width: 0;
     }
     @media (max-width: 360px){
-      .btnbar button{
-        font-size: 13px;
-        padding: 10px 12px;
-      }
+      .btnbar button{ font-size: 13px; padding: 10px 12px; }
     }
+
+    /* gap fallback */
+    .checkline > * + * { margin-left: 10px; }
+    .btnbar > * + * { margin-left: 10px; }
+    .copyline > * + * { margin-left: 10px; }
   </style>
 </head>
 
@@ -238,6 +274,10 @@
           <div>
             <label for="names" class="label-required">참여자 이름(쉼표로 구분)</label>
             <textarea id="names" placeholder="예)성준, 늠름, 원섭, 준영"></textarea>
+
+            <!-- ✅ 실시간 인원 카운터 -->
+            <div class="hint" id="nameCount">현재 0명 입력됨 (총 입력 0)</div>
+
             <div class="hint">* 코트 기준으로 조가 생성됩니다. (복식=4명, 단식=2명)</div>
           </div>
 
@@ -260,7 +300,6 @@
           </div>
         </div>
 
-        <!-- ✅ 체크박스: 중복 없이 여기만 사용 -->
         <div class="controls">
           <div class="checkline">
             <input id="enforceNoRepeatRest" type="checkbox" checked />
@@ -274,8 +313,8 @@
         </div>
 
         <div class="btnbar">
-          <button id="btnMake">팀 매칭</button>
-          <button id="btnReset" class="secondary">초기화</button>
+          <button id="btnMake" type="button">팀 매칭</button>
+          <button id="btnReset" type="button" class="secondary">초기화</button>
         </div>
 
         <div id="status" class="status"></div>
@@ -288,7 +327,7 @@
             <div class="hint" id="summary">아직 조 편성을 하지 않았어요.</div>
           </div>
           <div class="copyline">
-            <button id="btnCopy" class="secondary">결과 복사</button>
+            <button id="btnCopy" type="button" class="secondary">결과 복사</button>
             <span id="toast" class="toast">복사 완료!</span>
           </div>
         </div>
@@ -300,20 +339,23 @@
   </div>
 
   <script>
+    const $ = (id) => document.getElementById(id);
+
     function mulberry32(seed) {
       let t = seed >>> 0;
       return function() {
         t += 0x6D2B79F5;
         let r = Math.imul(t ^ (t >>> 15), 1 | t);
-        r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+        r ^= r + Math.imul(r ^ (t >>> 7), 61 | r);
         return ((r ^ (t >>> 14)) >>> 0) / 4294967296;
       };
     }
 
-    const $ = (id) => document.getElementById(id);
-
     function parseNames(raw) {
-      return raw.split(/[\n,;\t]+/g).map(s => s.trim()).filter(Boolean);
+      return raw
+        .split(/[\n,;\t]+/g)
+        .map(s => s.trim())
+        .filter(Boolean);
     }
 
     function shuffle(arr, rand=Math.random) {
@@ -348,8 +390,10 @@
       } else {
         const maxPlayers = courts * 4;
         const minPlayers = courts * 2;
+
         const target = Math.min(n, maxPlayers);
         const evenTarget = target - (target % 2);
+
         playCount = Math.max(minPlayers, evenTarget);
         playCount = Math.min(playCount, maxPlayers, n);
         playCount = playCount - (playCount % 2);
@@ -394,6 +438,7 @@
       }
 
       const groups = [];
+
       if (!allowSingles) {
         for (let i = 0; i < players.length; i += 4) groups.push(players.slice(i, i + 4));
       } else {
@@ -460,6 +505,23 @@
       return lines.join("\n");
     }
 
+    function legacyCopy(text){
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "-9999px";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+      return ok;
+    }
+
     const namesEl = $("names");
     const prevRestEl = $("prevRest");
     const courtsEl = $("courts");
@@ -469,6 +531,17 @@
     const summaryEl = $("summary");
     const statusEl = $("status");
     const toastEl = $("toast");
+    const resultCardEl = $("resultCard");
+
+    /* ✅ 실시간 카운터 */
+    const nameCountEl = $("nameCount");
+    function updateNameCount(){
+      const all = parseNames(namesEl.value);
+      const uniq = new Set(all);
+      nameCountEl.textContent = `현재 ${uniq.size}명 입력됨 (총 입력 ${all.length})`;
+    }
+    namesEl.addEventListener("input", updateNameCount);
+    updateNameCount();
 
     let latestText = "";
 
@@ -501,11 +574,19 @@
       latestText = toText(groups, rest);
 
       requestAnimationFrame(() => {
-        $("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
+        if (resultCardEl && typeof resultCardEl.scrollIntoView === "function") {
+          resultCardEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+        }
       });
 
-      const courtInfo = allowSingles ? ` / 복식 ${doublesCourts}코트 + 단식 ${singlesCourts}코트` : "";
-      summaryEl.textContent = `총 ${names.length}명 / 코트 ${courts}개${courtInfo} → 참여 ${playCount}명, 휴식 ${restCount}명`;
+      const courtInfo = allowSingles
+        ? ` / 복식 ${doublesCourts}코트 + 단식 ${singlesCourts}코트`
+        : "";
+
+      summaryEl.textContent =
+        `총 ${names.length}명 / 코트 ${courts}개${courtInfo} → 참여 ${playCount}명, 휴식 ${restCount}명`;
 
       if (ignored.length > 0) {
         statusEl.textContent = `참고: 휴식자 입력 중 참여자 목록에 없는 이름은 무시했어요 → ${ignored.join(", ")}`;
@@ -528,23 +609,37 @@
       seedEl.value = "";
       enforceEl.checked = true;
       allowSinglesEl.checked = false;
+
       $("output").innerHTML = "";
       summaryEl.textContent = "아직 조 편성을 하지 않았어요.";
       statusEl.textContent = "";
       statusEl.className = "status";
       latestText = "";
       toastEl.style.display = "none";
+
+      updateNameCount(); // ✅ 카운터도 초기화
     });
 
     $("btnCopy").addEventListener("click", async () => {
       if (!latestText) return;
+
       try {
-        await navigator.clipboard.writeText(latestText);
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(latestText);
+          toastEl.style.display = "inline";
+          setTimeout(() => (toastEl.style.display = "none"), 1200);
+          return;
+        }
+      } catch (e) {}
+
+      const ok = legacyCopy(latestText);
+      if (ok) {
         toastEl.style.display = "inline";
         setTimeout(() => (toastEl.style.display = "none"), 1200);
-      } catch (e) {
-        window.prompt("복사해서 사용하세요:", latestText);
+        return;
       }
+
+      window.prompt("복사해서 사용하세요:", latestText);
     });
   </script>
 </body>
