@@ -1,4 +1,3 @@
-<!doctype html>
 <html lang="ko" translate="no">
 <head>
   <meta charset="utf-8" />
@@ -112,7 +111,6 @@
     }
     .small{ min-height: 120px; }
 
-    /* ✅ 중복 입력 시 textarea 빨간 강조 */
     textarea.dup{
       border-color: rgba(239,68,68,0.75);
       box-shadow: 0 0 0 3px rgba(239,68,68,0.18);
@@ -275,7 +273,6 @@
       .btnbar button{ font-size: 13px; padding: 10px 12px; }
     }
 
-    /* gap fallback */
     .checkline > * + * { margin-left: 10px; }
     .btnbar > * + * { margin-left: 10px; }
     .copyline > * + * { margin-left: 10px; }
@@ -359,6 +356,16 @@
   <script>
     const $ = (id) => document.getElementById(id);
 
+    /*********************************************************
+     * ✅ LIVE 업로드 설정
+     *********************************************************/
+    const LIVE_ENABLED = true;
+    const LIVE_API_URL = "https://script.google.com/macros/s/AKfycbwRcIc-LvIumOnpsmthxObSYgVgqq2obWS69VVPt9k2gBBfLHLHeQZeGB3r6rpuyVE/exec";
+    const LIVE_TOKEN   = "PICKTHESPOON-LIVE-STREAM";
+
+    /*********************************************************
+     * 유틸
+     *********************************************************/
     function mulberry32(seed) {
       let t = seed >>> 0;
       return function() {
@@ -395,6 +402,44 @@
       return s;
     }
 
+    /*********************************************************
+     * ✅ LIVE 업로드 함수 (CORS 회피 적용)
+     *********************************************************/
+    async function uploadLiveResult(payload){
+      if (!LIVE_ENABLED) return;
+      if (!LIVE_API_URL) return;
+
+      const url = LIVE_API_URL + "?token=" + encodeURIComponent(LIVE_TOKEN);
+      const body = JSON.stringify(payload);
+
+      // ✅ 1순위: sendBeacon (CORS 영향 거의 없음, 모바일에서도 안정적)
+      if (navigator.sendBeacon) {
+        try {
+          const blob = new Blob([body], { type: "text/plain;charset=utf-8" });
+          const ok = navigator.sendBeacon(url, blob);
+          if (!ok) console.log("sendBeacon returned false");
+          return;
+        } catch (e) {
+          console.log("sendBeacon failed, fallback to fetch", e);
+        }
+      }
+
+      // ✅ 2순위: fetch no-cors + text/plain (프리플라이트 회피)
+      try {
+        await fetch(url, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body
+        });
+      } catch(e){
+        console.log("live upload failed", e);
+      }
+    }
+
+    /*********************************************************
+     * 라운드 생성 로직
+     *********************************************************/
     function makeRound(names, prevRest, courts, seedValue, enforce=true, allowSingles=false) {
       const n = names.length;
       const rand = (seedValue !== null && seedValue !== "") ? mulberry32(Number(seedValue)) : Math.random;
@@ -439,7 +484,7 @@
         rest = all.slice(playCount);
       } else {
         if (eligibleRest.length < restCount) {
-          warning = "⚠️ 휴식 인원이 너무 많아요";
+          warning = "⚠️ 이번 라운드 휴식 인원이 많아 ‘직전 휴식자 연속 휴식 금지’를 완전히 만족할 수 없습니다.";
           rest = eligibleRest.slice(0);
           rest = rest.concat(ineligibleRest.slice(0, restCount - rest.length));
 
@@ -540,6 +585,9 @@
       return ok;
     }
 
+    /*********************************************************
+     * DOM
+     *********************************************************/
     const namesEl = $("names");
     const prevRestEl = $("prevRest");
     const courtsEl = $("courts");
@@ -551,12 +599,10 @@
     const toastEl = $("toast");
     const resultCardEl = $("resultCard");
 
-    // ✅ 실시간 카운터 + 중복 표시
     const nameCountEl = $("nameCount");
     const dupHintEl = $("dupHint");
     const btnMakeEl = $("btnMake");
 
-    // ✅ "중복 경고를 띄운 상태" 플래그(중복 제거 시 문구 자동 제거용)
     let dupWarningShown = false;
 
     function getNameStats(raw){
@@ -566,16 +612,15 @@
 
       const duplicates = [];
       for (const [nm, cnt] of map.entries()) {
-        if (cnt >= 2) duplicates.push(nm); // ✅ 완전 동일 문자열만 중복
+        if (cnt >= 2) duplicates.push(nm);
       }
-
       return { all, uniqCount: map.size, duplicates };
     }
 
     function updateNameUI(){
       const { all, uniqCount, duplicates } = getNameStats(namesEl.value);
 
-      nameCountEl.textContent = `현재 ${uniqCount}명`;
+      nameCountEl.textContent = `현재 ${uniqCount}명 입력됨 (총 입력 ${all.length})`;
 
       if (duplicates.length > 0) {
         namesEl.classList.add("dup");
@@ -595,7 +640,6 @@
 
         btnMakeEl.disabled = false;
 
-        // ✅ 중복 경고가 떠 있었던 경우에만 status를 지움 (다른 결과 메시지는 유지)
         if (dupWarningShown) {
           statusEl.textContent = "";
           statusEl.className = "status";
@@ -609,8 +653,7 @@
 
     let latestText = "";
 
-    $("btnMake").addEventListener("click", () => {
-      // ✅ 클릭 시에도 한번 더 확인(안전)
+    $("btnMake").addEventListener("click", async () => {
       const { duplicates } = getNameStats(namesEl.value);
       if (duplicates.length > 0) return;
 
@@ -658,16 +701,32 @@
 
       if (ignored.length > 0) {
         statusEl.textContent = `참고: 휴식자 입력 중 참여자 목록에 없는 이름은 무시했어요 → ${ignored.join(", ")}`;
-        statusEl.classList.add("warn");
+        statusEl.className = "status warn";
       }
-
       if (warning) {
         statusEl.textContent = warning;
-        statusEl.classList.add("warn");
+        statusEl.className = "status warn";
       } else if (enforce && prevRest.length > 0 && restCount > 0) {
         statusEl.textContent = "✅ 직전 휴식자 연속 휴식 금지 룰을 적용했어요.";
-        statusEl.classList.add("ok");
+        statusEl.className = "status ok";
       }
+
+      const livePayload = {
+        updatedAt: new Date().toISOString(),
+        summary: summaryEl.textContent,
+        warning: warning || "",
+        settings: {
+          courts: courts,
+          allowSingles: allowSingles,
+          enforceNoRepeatRest: enforce,
+          seed: seedValue || ""
+        },
+        groups: groups,
+        rest: rest,
+        text: latestText
+      };
+
+      uploadLiveResult(livePayload);
     });
 
     $("btnReset").addEventListener("click", () => {
@@ -685,9 +744,7 @@
       latestText = "";
       toastEl.style.display = "none";
 
-      // ✅ 중복 경고 플래그도 초기화
       dupWarningShown = false;
-
       updateNameUI();
     });
 
